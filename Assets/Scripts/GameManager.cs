@@ -18,7 +18,6 @@
   public GameState GameState { get; set; }
 
   public void GameOver() {
-    UIManager.Instance.SetStatus(Constants.StatusDeadTapToStart);
     this.GameState = GameState.Dead;
   }
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class CharacterMovement : MonoBehaviour {
@@ -34,7 +35,6 @@ public class CharacterMovement : MonoBehaviour {
     this.ResetMoveDirection();
 
     UIManager.Instance.ResetScore();
-    UIManager.Instance.SetStatus(Constants.StatusTapToStart);
 
     GameManager.Instance.GameState = GameState.Default;
 
@@ -51,15 +51,13 @@ public class CharacterMovement : MonoBehaviour {
         if (Input.GetMouseButtonUp(0)) {
           var instance = GameManager.Instance;
           instance.GameState = GameState.Running;
-
-          UIManager.Instance.SetStatus(string.Empty);
         }
         break;
       case GameState.Running:
         float h = height;
         Vector3 position = transform.position;
         UIManager.Instance.IncreaseScore(0.1f);
-      anim.SetBool(Constants.AnimationStarted, true);
+        anim.SetBool(Constants.AnimationStarted, true);
 
         CheckHeight();
 
@@ -91,16 +89,22 @@ public class CharacterMovement : MonoBehaviour {
         position.y += (controller.height - lastHeight) * 0.5f; 
         controller.Move(moveDirection * Time.deltaTime);
         break;
+
       case GameState.Dead:
+        anim.SetBool(Constants.AnimationJump, false);
+        anim.SetBool(Constants.AnimationSlide, false);
         anim.SetBool(Constants.AnimationStarted, false);
-        if (Input.GetMouseButtonUp(0)) {
-          SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        StartCoroutine("EndScene");
         break;
       default:
         break;
     }
 
+  }
+
+  private IEnumerator EndScene() {
+    yield return new WaitForSeconds(2f); 
+    SceneManager.LoadScene("EndScene");
   }
 
   private void CheckHeight() {

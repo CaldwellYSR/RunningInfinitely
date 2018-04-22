@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 
-  public Text ScoreText, StatusText;
+  public Text ScoreText;
 
-  private float score = 0;
+  private static float score = 0;
 
   void Awake() {
     if (instance == null) {
@@ -43,11 +44,7 @@ public class UIManager : MonoBehaviour {
     UpdateScoreText();
   }
 
-  private void UpdateScoreText() {
-    ScoreText.text = score.ToString("n2");
-  }
-
-  public void SetStatus(string text) {
-    StatusText.text = text;
+  public void UpdateScoreText() {
+    GameObject.Find("ScoreText").GetComponent<Text>().text = "Score: " + score.ToString("n2");
   }
 }
