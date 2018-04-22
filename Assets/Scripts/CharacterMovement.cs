@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CharacterMovement : MonoBehaviour {
 
@@ -35,6 +36,7 @@ public class CharacterMovement : MonoBehaviour {
     this.ResetMoveDirection();
 
     UIManager.Instance.ResetScore();
+    GameObject.Find("ScoreText").GetComponent<Text>().text = UIManager.Instance.UpdatedScoreText();
 
     GameManager.Instance.GameState = GameState.Default;
 
@@ -43,6 +45,7 @@ public class CharacterMovement : MonoBehaviour {
     inputDetector = GetComponent<IInputDetector>();
 
     height = controller.height;
+    GameManager.Instance.GameState = GameState.Running;
   }
 
   void Update() {
@@ -56,7 +59,8 @@ public class CharacterMovement : MonoBehaviour {
       case GameState.Running:
         float h = height;
         Vector3 position = transform.position;
-        UIManager.Instance.IncreaseScore(0.1f);
+        UIManager.Instance.IncreaseScore(1f);
+        GameObject.Find("ScoreText").GetComponent<Text>().text = UIManager.Instance.UpdatedScoreText();
         anim.SetBool(Constants.AnimationStarted, true);
 
         CheckHeight();

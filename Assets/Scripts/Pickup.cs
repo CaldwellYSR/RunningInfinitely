@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Pickup : MonoBehaviour {
 
@@ -27,6 +28,7 @@ public class Pickup : MonoBehaviour {
 
   void OnTriggerEnter(Collider col) {
     UIManager.Instance.IncreaseScore(ScorePoints);
+    GameObject.Find("ScoreText").GetComponent<Text>().text = UIManager.Instance.UpdatedScoreText();
     Destroy(this.gameObject);
   }
 }
