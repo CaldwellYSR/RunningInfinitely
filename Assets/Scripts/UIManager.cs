@@ -19,6 +19,10 @@
     score = 0;
   }
 
+  public float GetScore() {
+    return score;
+  }
+
   public void SetScore(float value) {
     score = value;
   }

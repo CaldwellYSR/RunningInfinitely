@@ -15,6 +15,7 @@ public class CharacterMovement : MonoBehaviour {
 
   public float slideTimerMax = 2f;
 
+  private float SpeedModifier = 1f;
   private Vector3 moveDirection = Vector3.zero;
   private CharacterController controller;
   private Animator anim;
@@ -63,6 +64,10 @@ public class CharacterMovement : MonoBehaviour {
         GameObject.Find("ScoreText").GetComponent<Text>().text = UIManager.Instance.UpdatedScoreText();
         anim.SetBool(Constants.AnimationStarted, true);
 
+        SetSpeedModifier();
+
+        moveDirection.z = Speed * SpeedModifier;
+
         CheckHeight();
 
         DetectJumpOrSwipeLeftRight();
@@ -106,6 +111,10 @@ public class CharacterMovement : MonoBehaviour {
 
   }
 
+  private void SetSpeedModifier() {
+    SpeedModifier = 1f + Mathf.Floor(UIManager.Instance.GetScore() / 4000f) * 0.1f;
+  }
+
   private IEnumerator EndScene() {
     yield return new WaitForSeconds(2f); 
     SceneManager.LoadScene("EndScene");
@@ -140,11 +149,11 @@ public class CharacterMovement : MonoBehaviour {
       if (inputDirection == InputDirection.Left && Lane > Constants.LeftLaneBoundary) {
         --Lane;
         locationAfterChangingLane = transform.position - sidewaysMovementDistance;
-        moveDirection.x = -SideWaysSpeed;
+        moveDirection.x = -SideWaysSpeed * SpeedModifier;
       } else if (inputDirection == InputDirection.Right && Lane < Constants.RightLaneBoundary) {
         ++Lane;
         locationAfterChangingLane = transform.position + sidewaysMovementDistance;
-        moveDirection.x = SideWaysSpeed;
+        moveDirection.x = SideWaysSpeed * SpeedModifier;
       }
     }
   }
@@ -152,13 +161,13 @@ public class CharacterMovement : MonoBehaviour {
   private void ResetMoveDirection() {
     moveDirection = transform.forward;
     moveDirection = transform.TransformDirection(moveDirection);
-    moveDirection *= Speed;
+    moveDirection *= Speed * SpeedModifier;
   }
 
   private void SetSlideMoveDirection() {
     moveDirection = transform.forward;
     moveDirection = transform.TransformDirection(moveDirection);
-    moveDirection *= SlideSpeed;
+    moveDirection *= SlideSpeed * SpeedModifier;
   }
 
 }
